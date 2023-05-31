@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-const { getUserLandingPage, getStudentInfo, saveFile, getStudent, postStudent, authenticateUser } = require('../controllers/user.controller')
+const { getUserLandingPage, getStudentInfo, saveFile, getStudent, postStudent, authenticateUser, getNodeMailer } = require('../controllers/user.controller')
 
 router.get("/", getUserLandingPage)
 
@@ -14,6 +14,8 @@ router.post('/auth', postStudent)
 router.post("/cloud", saveFile)
 
 router.post("/signin", authenticateUser)
+
+router.get('/mail', getNodeMailer)
 
 
 

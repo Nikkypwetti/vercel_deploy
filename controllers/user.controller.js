@@ -2,6 +2,8 @@ const student = require('../models/student.model');
 
 const cloudinary = require('cloudinary').v2;
 
+const nodemailer = require('nodemailer')
+
 // Configuration 
 cloudinary.config({
   cloud_name: process.env.CLOUD_NAME,
@@ -55,6 +57,41 @@ const saveFile = (req,res) => {
     });
 }
 
+const getNodeMailer = (req, res) => {
+    // res.send({message:"successfully uploaded", status: true});
+    let transporter = nodemailer.createTransport({
+        service: "gmail",
+        auth: {
+            user: process.env.USER,
+            pass: process.env.PASS,
+        }
+    })
+
+    let mailoptions = {
+        from : process.env.USER,
+        to : ['olanikebasirat12@gmail.com', 'nikkypwetti@gmail.com'],
+        subject : 'Nodemailer Check',
+        text : 'Hello, Nodemailer',
+        html : "<h1>This is node mailer check</h1>",
+        attachments : [
+            {
+                filename : "paperbag",
+                path : "https://res.cloudinary.com/dtu3koszg/image/upload/v1684922695/paperbag.png",
+            }
+        ]
+    }
+
+    transporter.sendMail(mailoptions)
+    .then((response) => {
+        res.send({status:"true", message:response})
+        console.log(response);
+    })
+    .catch((err) => {
+        console.log(err);
+        res.send({status:"false", message:err})
+    })
+}
+
 const getStudentInfo = (req,res) => {
      console.log(req.body);  
      res.send('success')
@@ -85,4 +122,4 @@ const postStudent = (req,res) => {
 const authenticateUser = (req, res) => {
     console.log(req.body);
 };
-module.exports = {getUserLandingPage, getStudentInfo, saveFile,getStudent,postStudent,authenticateUser}
+module.exports = {getUserLandingPage, getStudentInfo, saveFile,getStudent,postStudent,authenticateUser, getNodeMailer}
